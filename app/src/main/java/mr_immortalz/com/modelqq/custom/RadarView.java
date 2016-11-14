@@ -153,7 +153,7 @@ public class RadarView extends View {
         canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth * circleProportion[3], mPaintLine); // 绘制中大圆
         canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth * circleProportion[4], mPaintLine);  // 绘制大圆
         canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth * circleProportion[5], mPaintLine);  // 绘制大大圆
-        //canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth * circleProportion[6], mPaintLine);  // 绘制大大圆
+      //  canvas.drawCircle(mWidth / 2, mHeight / 2, mWidth * circleProportion[6], mPaintLine);  // 绘制大大圆
     }
 
     /**

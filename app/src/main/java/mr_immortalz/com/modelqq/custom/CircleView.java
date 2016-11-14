@@ -20,25 +20,25 @@ public class CircleView extends View {
     private Paint mPaint;
     private Bitmap mBitmap;
     private float radius = DisplayUtils.dp2px(getContext(),9);//半径
-    private float disX;//位置X
-    private float disY;//位置Y
+    private double disX;//位置X
+    private double disY;//位置Y
     private float angle;//旋转的角度
-    private float proportion;//根据远近距离的不同计算得到的应该占的半径比例
-private float distance;
+    private double proportion;//根据远近距离的不同计算得到的应该占的半径比例
+private double distance;
 
-    public float getDistance() {
+    public double getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(double distance) {
         this.distance = distance;
     }
 
-    public float getProportion() {
+    public double getProportion() {
         return proportion;
     }
 
-    public void setProportion(float proportion) {
+    public void setProportion(double proportion) {
         this.proportion = proportion;
     }
 
@@ -50,19 +50,19 @@ private float distance;
         this.angle = angle;
     }
 
-    public float getDisX() {
+    public double getDisX() {
         return disX;
     }
 
-    public void setDisX(float disX) {
+    public void setDisX(double disX) {
         this.disX = disX;
     }
 
-    public float getDisY() {
+    public double getDisY() {
         return disY;
     }
 
-    public void setDisY(float disY) {
+    public void setDisY(double disY) {
         this.disY = disY;
     }
 

@@ -6,20 +6,19 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 /**
- * Created by Mr_immortalZ on 2016/5/2.
- * email : mr_immortalz@qq.com
+ * Created by DELL2 on 7/27/2016.
  */
-public class CustomViewPager extends ViewPager{
+public class CustomViewPager extends ViewPager {
     private long downTime;
     private float LastX;
     private float mSpeed;
-
+    boolean enabled=true;
     public CustomViewPager(Context context) {
         super(context);
     }
 
     public CustomViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs);this.enabled = true;
     }
 
     @Override
@@ -48,4 +47,26 @@ public class CustomViewPager extends ViewPager{
     public void setSpeed(float mSpeed) {
         this.mSpeed = mSpeed;
     }
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        if (this.enabled) {
+            return super.onInterceptTouchEvent(event);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // Never allow swiping to switch between pages
+        if (this.enabled) {
+            return super.onTouchEvent(event);
+        }
+
+        return false;
+    }
+    public void setPagingEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }
+

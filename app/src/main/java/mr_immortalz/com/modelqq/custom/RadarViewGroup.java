@@ -2,11 +2,18 @@ package mr_immortalz.com.modelqq.custom;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
+import mr_immortalz.com.modelqq.utils.DisplayUtils;
 import mr_immortalz.com.modelqq.utils.LogUtil;
 import mr_immortalz.com.modelqq.R;
 import mr_immortalz.com.modelqq.been.Info;
@@ -58,7 +65,7 @@ public class RadarViewGroup extends ViewGroup implements RadarView.IScanningList
                 ((RadarView) child).setScanningListener(this);
                 //考虑到数据没有添加前扫描图在扫描，但是不会开始为CircleView布局
                 if (mDatas != null && mDatas.size() > 0) {
-                    ((RadarView) child).setMaxScanItemCount(mDatas.size());
+                    ((RadarView) child).setMaxScanItemCount(50);
                     ((RadarView) child).startScan();
                 }
                 continue;
@@ -82,9 +89,9 @@ public class RadarViewGroup extends ViewGroup implements RadarView.IScanningList
                 continue;
             }
 
-            ((CircleView) child).setDisX((float) Math.cos(Math.toRadians(scanAngleList.get(i - 1) - 5))
+            ((CircleView) child).setDisX((double) Math.cos(Math.toRadians(scanAngleList.get(i - 1) - 5))
                     * ((CircleView) child).getProportion() * mWidth / 2);
-            ((CircleView) child).setDisY((float) Math.sin(Math.toRadians(scanAngleList.get(i - 1) - 5))
+            ((CircleView) child).setDisY((double) Math.sin(Math.toRadians(scanAngleList.get(i - 1) - 5))
                     * ((CircleView) child).getProportion() * mWidth / 2);
 
             if (scanAngleList.get(i - 1) == 0) {
@@ -134,11 +141,11 @@ public class RadarViewGroup extends ViewGroup implements RadarView.IScanningList
      *
      * @param mDatas
      */
-    public void setDatas(SparseArray<Info> mDatas ) {
+    public void setDatas(final SparseArray<Info> mDatas ) {
         this.mDatas = mDatas;
         dataLength = mDatas.size();
-         float max = Float.MAX_VALUE;
-        float min = Float.MIN_VALUE;
+         double max = Float.MAX_VALUE;
+        double min = Float.MIN_VALUE;
         //找到距离的最大值，最小值对应的minItemPosition
         for (int j = 0; j < dataLength; j++) {
             Info item = mDatas.get(j);
@@ -153,19 +160,23 @@ public class RadarViewGroup extends ViewGroup implements RadarView.IScanningList
         }
         //根据数据源信息动态添加CircleView
         for (int i = 0; i < dataLength; i++) {
-            CircleView circleView = new CircleView(getContext());
-            if (mDatas.get(i).getSex()) {
-                circleView.setPaintColor(getResources().getColor(R.color.bg_color_pink));
+            final CircleView circleView = new CircleView(getContext());
+            if (mDatas.get(i).isMeetup0_user1()) {
+                circleView.setBackgroundResource(R.drawable.placeholder);
             } else {
-                circleView.setPaintColor(getResources().getColor(R.color.bg_color_blue));
+                circleView.setBackgroundResource(R.drawable.placeholder);
             }
             //根据远近距离的不同计算得到的应该占的半径比例 0.312-0.832
-           // circleView.setProportion((mDatas.get(i).getDistance() / min + 0.6f) * 0.52f);
-            circleView.setProportion(mDatas.get(i).getDistance() );
+
+            double proportion=(mDatas.get(i).getDistance() / min + 0.6f) * 0.52f;
+           circleView.setProportion(proportion);
+        //    circleView.setProportion(mDatas.get(i).getDistance() );
             if (minItemPosition == i) {
                 minShowChild = circleView;
             }
             circleView.setDistance(mDatas.get(i).getDistance());
+            final int finalI = i;
+
             addView(circleView);
         }
     }
@@ -220,14 +231,14 @@ public class RadarViewGroup extends ViewGroup implements RadarView.IScanningList
      */
     private void startAnim(CircleView object, int position) {
         if (object != null) {
-            object.setPortraitIcon(mDatas.get(position).getPortraitId());
+            object.setPortraitIcon(R.drawable.boy);
             ObjectAnimator.ofFloat(object, "scaleX", 2f).setDuration(300).start();
             ObjectAnimator.ofFloat(object, "scaleY", 2f).setDuration(300).start();
         }
     }
     private void startAnimCurrentSelected(CircleView object, int position) {
         if (object != null) {
-            object.setPortraitIcon(mDatas.get(position).getPortraitId());
+            object.setPortraitIcon(R.drawable.boy);
             ObjectAnimator.ofFloat(object, "scaleX", 3f).setDuration(300).start();
             ObjectAnimator.ofFloat(object, "scaleY", 3f).setDuration(300).start();
         }
