@@ -179,9 +179,9 @@ public class RadarViewGroup extends ViewGroup implements RadarView.IScanningList
     @Override
     public void onScanning(int position, float scanAngle) {
         if (scanAngle == 0) {
-            scanAngleList.put(position, 1f);
+            scanAngleList.put(position,   ((float)Math.random()));
         } else {
-            scanAngleList.put(position, scanAngle);
+            scanAngleList.put(position, scanAngle*((float)Math.random()));
         }
         setAllShowItem(position);
         requestLayout();

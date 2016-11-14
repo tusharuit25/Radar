@@ -37,8 +37,8 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
     private int[] mImgs = {R.drawable.len, R.drawable.leo, R.drawable.lep,
             R.drawable.leq, R.drawable.ler, R.drawable.les, R.drawable.mln, R.drawable.mmz, R.drawable.mna,
             R.drawable.mnj, R.drawable.leo, R.drawable.leq, R.drawable.les, R.drawable.lep};
-    private String[] mNames = {"15", "25", "45", "25", "59", "60", "87", "99", "10", "23", "124", "100", "20", "85"};
-    private double[] mDistance = {15, 25, 45, 25, 59, 60, 87, 99, 10, 23, 124, 100, 20, 85};
+    private String[] mNames = {"90","25","14","55","14","99","44","22","66","29","34","88","104","22"};
+    private double[] mDistance = {90,25,14,55,14,99,44,22,66,29,34,88,104,22};
     private int mPosition;
     private FixedSpeedScroller scroller;
     private SparseArray<Info> mDatas = new SparseArray<>();
@@ -64,6 +64,18 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
         viewPager.addOnPageChangeListener(this);
         radar.setProgress(150);
         setViewPagerSpeed(250);
+        int n = mDatas.size();
+        Info swap = new Info();
+        for (int c = 0; c < (n - 1); c++) {
+            for (int d = 0; d < n - c - 1; d++) {
+                if (mDatas.get(d).getDistance() > mDatas.get(d + 1).getDistance()) /* For descending order use < */ {
+
+                    swap = mDatas.get(d);
+                    mDatas.setValueAt(d, mDatas.get(d + 1));
+                    mDatas.setValueAt(d + 1, swap);
+                }
+            }
+        }
         for (int i = 0; i < mDatas.size(); i++) {
             tempmDatas.put(i, mDatas.get(i));
         }
@@ -222,6 +234,9 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
     @Override
     public void onRadarItemClick(int position) {
+
+
+
         viewPager.setCurrentItem(position);
     }
 
