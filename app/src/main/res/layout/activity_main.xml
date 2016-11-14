@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp">
+
+    <mr_immortalz.com.modelqq.custom.RadarViewGroup
+        android:id="@+id/radar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp">
+
+        <mr_immortalz.com.modelqq.custom.RadarView
+            android:id="@id/id_scan_circle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </mr_immortalz.com.modelqq.custom.RadarViewGroup>
+
+
+    <SeekBar
+        android:id="@+id/pradarProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:max="150"
+        android:layout_weight="2">
+
+    </SeekBar>
+
+    <RelativeLayout
+        android:id="@+id/ry_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
+        android:clipChildren="false">
+
+
+        <mr_immortalz.com.modelqq.custom.CustomViewPager
+            android:id="@+id/vp"
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+
+            android:layout_height="160dp" />
+    </RelativeLayout>
+
+
+</RelativeLayout>
