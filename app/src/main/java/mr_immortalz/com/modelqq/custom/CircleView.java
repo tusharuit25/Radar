@@ -24,6 +24,15 @@ public class CircleView extends View {
     private float disY;//位置Y
     private float angle;//旋转的角度
     private float proportion;//根据远近距离的不同计算得到的应该占的半径比例
+private float distance;
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
 
     public float getProportion() {
         return proportion;

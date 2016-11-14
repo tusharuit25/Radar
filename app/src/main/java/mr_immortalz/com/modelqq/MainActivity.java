@@ -1,6 +1,7 @@
 package mr_immortalz.com.modelqq;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import java.lang.reflect.Field;
 
 import mr_immortalz.com.modelqq.been.Info;
+import mr_immortalz.com.modelqq.custom.CircleView;
 import mr_immortalz.com.modelqq.custom.CustomViewPager;
 import mr_immortalz.com.modelqq.custom.RadarViewGroup;
 import mr_immortalz.com.modelqq.utils.FixedSpeedScroller;
@@ -31,14 +33,16 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
     private CustomViewPager viewPager;
     private RelativeLayout ryContainer;
     private RadarViewGroup radarViewGroup;
+    ViewpagerAdapter mAdapter;
     private int[] mImgs = {R.drawable.len, R.drawable.leo, R.drawable.lep,
             R.drawable.leq, R.drawable.ler, R.drawable.les, R.drawable.mln, R.drawable.mmz, R.drawable.mna,
             R.drawable.mnj, R.drawable.leo, R.drawable.leq, R.drawable.les, R.drawable.lep};
-    private String[] mNames = {"ImmortalZ", "唐马儒", "王尼玛", "张全蛋", "蛋花", "王大锤", "叫兽", "哆啦A梦"};
-    private double[] mDistance = {200.0f, 120.0f, 100.0f, 59.0f, 22.0f, 34.0f, 89.0f, 9.0f};
+    private String[] mNames = {"15", "25", "45", "25", "59", "60", "87", "99", "10", "23", "124", "100", "20", "85"};
+    private double[] mDistance = {15, 25, 45, 25, 59, 60, 87, 99, 10, 23, 124, 100, 20, 85};
     private int mPosition;
     private FixedSpeedScroller scroller;
     private SparseArray<Info> mDatas = new SparseArray<>();
+    private SparseArray<Info> tempmDatas = new SparseArray<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +57,22 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
                 return viewPager.dispatchTouchEvent(event);
             }
         });
-        ViewpagerAdapter mAdapter = new ViewpagerAdapter();
-        viewPager.setAdapter(mAdapter);
+
         viewPager.setOffscreenPageLimit(mImgs.length);
         viewPager.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.viewpager_margin));
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         viewPager.addOnPageChangeListener(this);
+        radar.setProgress(150);
         setViewPagerSpeed(250);
+        for (int i = 0; i < mDatas.size(); i++) {
+            tempmDatas.put(i, mDatas.get(i));
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                radarViewGroup.setDatas(mDatas,150);
+                radarViewGroup.setDatas(mDatas);
+                mAdapter = new ViewpagerAdapter();
+                viewPager.setAdapter(mAdapter);
             }
         }, 1500);
 
@@ -76,14 +85,34 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
                 //Toast toast=Toast.makeText(getApplicationContext(),"Hello Javatpoint"+progress,Toast.LENGTH_SHORT);
                 //toast.setMargin(50,50);
                 //toast.show();
-                initView();
+                ///  initView();
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        radarViewGroup.setDatas(mDatas,progress);
+
+
+
+                int childCount = radarViewGroup.getChildCount();
+                //首先放置雷达扫描图
+                View view = findViewById(R.id.id_scan_circle);
+                if (view != null) {
+                    view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+                }
+                //放置雷达图中需要展示的item圆点
+                for (int i = 0; i < childCount; i++) {
+                    final int j = i;
+                    final View child = radarViewGroup.getChildAt(i);
+                    if (child.getId() == R.id.id_scan_circle) {
+                        continue;
                     }
-                }, 1500);
+
+                    CircleView circleView = ((CircleView) child);
+                    float distance = circleView.getDistance();
+                    if ((distance * 100) > progress) {
+                        circleView.setVisibility(View.GONE);
+                    } else {
+                        circleView.setVisibility(View.VISIBLE);
+                    }
+
+                }
 
             }
 
@@ -93,6 +122,24 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                tempmDatas = new SparseArray<Info>();
+                int k = 0;
+                for (int i = 0; i < mDatas.size(); i++) {
+
+                    float progress=((float)seekBar.getProgress());
+                    float distance=mDatas.get(i).getDistance()*100;
+
+
+                    if ( distance<= progress) {
+                        tempmDatas.put(k, mDatas.get(i));
+                        k++;
+                    }
+                }
+
+                viewPager = (CustomViewPager) findViewById(R.id.vp);
+                mAdapter = new ViewpagerAdapter();
+                viewPager.setAdapter(mAdapter);
+
             }
         });
     }
@@ -102,10 +149,10 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
         for (int i = 0; i < mImgs.length; i++) {
             Info info = new Info();
             info.setPortraitId(mImgs[i]);
-            info.setAge(((int) Math.random() * 25 + 16) + "岁");
-            info.setName(mNames[(int) (Math.random() * mNames.length)]);
+            info.setAge(((int) Math.random() * 25 + 16) + "");
+            info.setName(mNames[i]);
             info.setSex(i % 3 == 0 ? false : true);
-            info.setDistance((float) (mDistance[(int) (Math.random() * mDistance.length)] / 100));
+            info.setDistance((float) (mDistance[i] / 100));
             mDatas.put(i, info);
         }
     }
@@ -180,11 +227,20 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
 
 
     class ViewpagerAdapter extends PagerAdapter {
+
+        float progress;
+
+
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            final Info info = mDatas.get(position);
-            //设置一大堆演示用的数据，麻里麻烦~~
+
+
+            final Info info = tempmDatas.get(position);
             View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.viewpager_layout, null);
+
+
+            //设置一大堆演示用的数据，麻里麻烦~~
+
             ImageView ivPortrait = (ImageView) view.findViewById(R.id.iv);
             ImageView ivSex = (ImageView) view.findViewById(R.id.iv_sex);
             TextView tvName = (TextView) view.findViewById(R.id.tv_name);
@@ -203,13 +259,17 @@ public class MainActivity extends Activity implements ViewPager.OnPageChangeList
                     Toast.makeText(MainActivity.this, "这是 " + info.getName() + " >.<", Toast.LENGTH_SHORT).show();
                 }
             });
+
+
             container.addView(view);
+
+
             return view;
         }
 
         @Override
         public int getCount() {
-            return mImgs.length;
+            return tempmDatas.size();
         }
 
         @Override

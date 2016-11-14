@@ -134,16 +134,16 @@ public class RadarViewGroup extends ViewGroup implements RadarView.IScanningList
      *
      * @param mDatas
      */
-    public void setDatas(SparseArray<Info> mDatas,float progress) {
+    public void setDatas(SparseArray<Info> mDatas ) {
         this.mDatas = mDatas;
         dataLength = mDatas.size();
-        //float min = Float.MAX_VALUE;
+         float max = Float.MAX_VALUE;
         float min = Float.MIN_VALUE;
         //找到距离的最大值，最小值对应的minItemPosition
         for (int j = 0; j < dataLength; j++) {
             Info item = mDatas.get(j);
-            if (item.getDistance() < progress) {
-                progress = item.getDistance();
+            if (item.getDistance() < max) {
+                max = item.getDistance();
                 minItemPosition = j;
             }
             if (item.getDistance() > min) {
@@ -160,10 +160,12 @@ public class RadarViewGroup extends ViewGroup implements RadarView.IScanningList
                 circleView.setPaintColor(getResources().getColor(R.color.bg_color_blue));
             }
             //根据远近距离的不同计算得到的应该占的半径比例 0.312-0.832
-            circleView.setProportion((mDatas.get(i).getDistance() / min + 0.6f) * 0.52f);
+           // circleView.setProportion((mDatas.get(i).getDistance() / min + 0.6f) * 0.52f);
+            circleView.setProportion(mDatas.get(i).getDistance() );
             if (minItemPosition == i) {
                 minShowChild = circleView;
             }
+            circleView.setDistance(mDatas.get(i).getDistance());
             addView(circleView);
         }
     }
